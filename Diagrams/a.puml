@@ -1,0 +1,17 @@
+class Artist {
+    -id: int
+    -name: String
+    -active: boolean
+    -debut: LocalDate
+    -genres: ArrayList<String>
+    -discography: ArrayList
+
+}
+
+class Band {
+    -name: String
+}
+
+
+
+Artist <|-- Band

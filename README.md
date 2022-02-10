@@ -1,2 +1,2 @@
-# Database
-School project. A code with many errors that tries to be well done and efficient. Strongly commented.
+# ArtistsDatabase
+This code is from a school proyect. Many aspects are incorrect, inefficient and improvable. 09-02-2022
