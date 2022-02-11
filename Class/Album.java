@@ -1,9 +1,9 @@
-package ArtistsDatabase.Class;
+package Database.Class;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import ArtistsDatabase.Tools.Util;
+import Database.Tools.Util;
 
 public class Album implements Comparable <Album> {
     public String name;
@@ -102,5 +102,10 @@ public class Album implements Comparable <Album> {
     @Override
     public int compareTo(Album pAlbum) {
         return getYear()- pAlbum.getYear();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

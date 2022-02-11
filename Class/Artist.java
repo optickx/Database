@@ -1,4 +1,4 @@
-package ArtistsDatabase.Class;
+package Database.Class;
 
 import java.util.*;
 import java.io.Serializable;
@@ -20,8 +20,8 @@ public abstract class Artist implements Serializable {
 
     /**All the parameters are obligatory.
      * ID has to be unique in the database.
-     * @param pID primary key. 
-     * Obligatory, Artists are serializable objects. 
+     * @param pID is the primary key, obligatory 
+     * being Artist a serializable class. 
      */
     public Artist(
     int pID, String pName, // does not include lablel.
@@ -33,20 +33,19 @@ public abstract class Artist implements Serializable {
     }
 
 
-    /**Includes the value of label. Basically the original
-     * constructor, but with all the parameters.
+    /**Includes the value of label.
      * @param pLabel optional.
     */
     public Artist(
     int pID, String pName, String pLabel,
     boolean pActive, LocalDate pDebut) {
+        // invokes original constructor.
         this(pID, pName, pActive, pDebut);
-        // invokes the other constructor.
         setLabel(pLabel);
     }
 
 
-    // Setters.
+    // Setters.    
     public void setName(String pName) {
         name = pName;
     }
@@ -63,7 +62,7 @@ public abstract class Artist implements Serializable {
 
     // Getters.
     public int getID() {
-        return ID; // constant
+        return ID; // constant value.
     }    
     public String getName() {
         return name;
@@ -76,25 +75,27 @@ public abstract class Artist implements Serializable {
     }
 
 
-    /**In case of being the year of the
-     *  debut album before, the value is wrong. 
-     * @return the first known year of the 
-     * artist, basically. (it could be checked 
-     * in the concerts database.)*/
-    public int debutYear() {
+    /**In case of being the year of the debut album 
+     * or any concert before, the value is wrong. 
+     * @return the first known year.
+     * @see Album
+     * @see Concert
+    */ 
+    public int getDebutYear() {
         int d = 0;
         if (getDebutAlbum() != null)
+            // avoid null pointers.
             if (getDebutAlbum().getYear() < debut.getYear())
                 d = getDebutAlbum().getYear();
         else d = debut.getYear();
-        // the value is not 
+        // the value is not updated.
         return d;
     }
 
 
-    // Pseudonyms. ----------------------------
+    // Pseudonyms.
     
-    /**Checks if one the names stored in the
+    /**Checks if any name stored in the
      * artist matches with the parameter.
     */
     public void addPseudonym(String pPseudonym) {
@@ -104,11 +105,10 @@ public abstract class Artist implements Serializable {
     }
 
 
-    /**
-     *  @return All pseudonyms concatenated.
+    /**@return All pseudonyms concatenated.
      * Only the name if there are none.
      */
-    public String pseudonyms() {
+    public String getPseudonyms() {
         String ans = "";
         if (aka.isEmpty())
             // message text. the value of name is constant.
@@ -120,13 +120,14 @@ public abstract class Artist implements Serializable {
     }
 
 
-    /**
-     *  @return A boolean telling if the value
+    /**@return A boolean telling if the value
      *  parameter is stored in the collection 
-     * of pseudonyms. Ignores case.
+     * of pseudonyms. 
+     * @param pPseudonym Ignores case.
      */
-    public boolean isKnownAs(String pPseudonym) {
+    private boolean isKnownAs(String pPseudonym) {
         boolean ans = false;
+        // TODO: improve the code by using lambda functions.
         Iterator <String> itr = aka.iterator();
         while (!ans && itr.hasNext()) 
             if (itr.next().equalsIgnoreCase(pPseudonym))
@@ -135,9 +136,11 @@ public abstract class Artist implements Serializable {
     }
     
 
+    // Genres.
+
     /**Adds a genre checking that is not
      * previously stored in genre collection.
-     * Ignores case. @param pGenre
+     * @param pGenre Ignores case.
     */
     public void addGenres(String pGenre) {
         if (!plays(pGenre))
@@ -147,7 +150,7 @@ public abstract class Artist implements Serializable {
 
     /**
      * @return All the genres concatenated.
-     * message if they're not genres stored.
+     * A message if they're not genres stored.
      */
     public String getGenres() {
         String ans = "";
@@ -162,7 +165,7 @@ public abstract class Artist implements Serializable {
     /**
      * @return A boolean if the value parameter is
      * stored in the collection of pseudonyms. 
-     * Ignores case.
+     * @param pGenre Ignores case.
      */
     private boolean plays(String pGenre) {
         boolean ans = false;
@@ -172,6 +175,8 @@ public abstract class Artist implements Serializable {
         return ans;
     }
 
+
+    // Discography.
 
     /**The album cannot be previously stored in discography.
      * Ignores case of the album's name.
@@ -183,7 +188,9 @@ public abstract class Artist implements Serializable {
         else 
             System.out.println("The album " + pAlbum.getName() + 
                 " is already in " + name + "'s discography.");
-        //TODO: is it necessary to do more stuff? the name isn't unique.
+        /*TODO: Create a comparison between albums
+        taking many attributes to tell if they're the
+        "same". Lambda functions baby.*/
     }
 
 
@@ -199,6 +206,20 @@ public abstract class Artist implements Serializable {
         return albumsFiltered;
     }
 
+    /*TODO: Search information about Lambda functions and add it.
+    public int a() {
+        String a = "";
+        discography.stream()
+        .filter(a1 -> a2.getYear.equals(1969))
+        .count();
+
+        aka.stream()
+        .filter(p == p).count();
+
+        Album al = new Album();
+        return 0;
+    }
+*/
 
     /**Sorts before returning the album. The change is permanent.
      * @return the first album by year.
@@ -210,8 +231,7 @@ public abstract class Artist implements Serializable {
     }
 
 
-    /**
-     * Returns a boolean if the name is
+    /**Returns a boolean if the name is
      * stored in the collection of pseudonyms. 
      * @param pName has to be the name of the album.
      * Ignores case.
@@ -225,28 +245,30 @@ public abstract class Artist implements Serializable {
 
 
     /**To make the process easier, albums are comparable. 
-     * @see Album implements comparable interface.
+     * Albmums implement the Comparable interface.
+     * @see Album 
      */
-
     private void sortAlbumsByYear() {
         Collections.sort(discography);
     }
 
 
-   //Concert related stuff. -----------------------------------------------
-
+    // Concerts management.   
    
-    public ArrayList <Concert> searchConcertsByPlace() {
-        ArrayList <Concert> filtered = new ArrayList <Concert> ();
-        /**
-         * It's suposed to access to the database and store all the data
-         * from the file, and create a temporary ArrayList <Concert>.
-         */
-        return filtered;
+   /**The artist has access to the concert database (static,
+    * yet to be designed) This way, to do all the management
+    * of the concerts, they should be stored inside an ArrayList.
+    * @see Concert being serializable objects
+    * @see ConcertsDatabase beng a static class(?)
+    */
+    public ArrayList <Concert> getConcerts() {
+        ArrayList <Concert> concerts = new ArrayList <Concert> ();
+        // uses the primary key of the artist.
+        // should send the ID to whatever method you call.
+        return concerts;
     }
 
-    public boolean playedThere() {// TODO: Should be private.
-        // TODO: Search in the file.
+    public boolean playedThere() {
         return false;
     }
 }

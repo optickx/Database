@@ -1,4 +1,4 @@
-package ArtistsDatabase.Class;
+package Database.Class;
 
 import java.io.Serializable;
 import java.util.ArrayList;
