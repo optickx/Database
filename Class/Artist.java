@@ -265,6 +265,13 @@ public abstract class Artist implements Serializable {
         ArrayList <Concert> concerts = new ArrayList <Concert> ();
         // uses the primary key of the artist.
         // should send the ID to whatever method you call.
+
+
+		ConcertsDatabase.getDirectory();
+        ConcertsDatabase.addConcert(new Concert(0, 1,LocalDate.now(), "Bilbao"));
+        ConcertsDatabase.showAllDatabase();
+
+
         return concerts;
     }
 

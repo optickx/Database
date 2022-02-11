@@ -1,4 +1,4 @@
-package ArtistsDatabase.Tools;
+package Database.Tools;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -219,7 +219,7 @@ public class Util {
 	}
 
 	// Returns the number of "lines" of a file.
-	public static int calculoFichero(File fich){
+	public static int fileLength(File fich){
 		int cont=0;
 		if (fich.exists()){
 			FileInputStream fis=null;

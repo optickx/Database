@@ -1,17 +1,27 @@
+'yeah
+
 class Artist {
-    -id: int
     -name: String
     -active: boolean
+    -instruments: ArrayList
+    -id: int
     -debut: LocalDate
-    -genres: ArrayList<String>
+    -genres: ArrayList
     -discography: ArrayList
-
 }
 
 class Band {
     -name: String
 }
 
+class Solo {
+    -stuff: a
+}
 
+class Musician {
+    
+}
 
 Artist <|-- Band
+
+Band -- Musician

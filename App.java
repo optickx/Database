@@ -1,8 +1,8 @@
-package ArtistsDatabase;
+package Database;
 
 // import java.util.*;
 import java.time.LocalDate;
-import ArtistsDatabase.Class.Band;
+import Database.Class.*;
 
 public class App {
 
@@ -13,6 +13,15 @@ public class App {
             "Bizarre Records",
             false,
             LocalDate.of(1966, 1, 1));
-        System.out.println(b.getLabel());
+
+        b.addAlbum(
+            new Album(
+                "Trout Mask Replica",
+                LocalDate.of(1969, 6, 15)));
+        
+        
+        System.out.println(b.getLabel() + " " + b.getName() + " " + b.getAlbumsFromYear(1969));
+        
+        
     }
 }
