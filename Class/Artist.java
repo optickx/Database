@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 
-public abstract class Artist implements Serializable {
+public abstract class Artist implements Comparable <Artist>, Serializable{
     private final int ID; // primary key
     private String name; 
     private String label;
@@ -226,13 +226,11 @@ public abstract class Artist implements Serializable {
         return false;
     }
 
-    // Album sorters.
 
-    /**To make the process easier, albums are comparable. 
+    /* To make the process easier, albums are comparable. 
      * Albums implement the Comparable interface. Important
      * to note that the default comparator compares the releasing
      *  date of an album, but it's easier to compare by year.
-     * @see Album 
      */
     public void sortAlbumsByYear() {
         discography.stream()
@@ -276,6 +274,12 @@ public abstract class Artist implements Serializable {
 
     @Override
     public String toString() {
+        // TODO: Return all the data of an artist.
         return "All this shitty text explaining the artist";
+    }
+
+    @Override
+    public int compareTo(Artist pArtist) {
+        return ID - pArtist.getID();
     }
 }
