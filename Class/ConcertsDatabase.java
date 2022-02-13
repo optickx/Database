@@ -46,6 +46,7 @@ public abstract class ConcertsDatabase {
         }
     }
 
+    
     /**
      * Private and auxiliar method to add a concert to the database.
      * @param pCode

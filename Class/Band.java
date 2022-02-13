@@ -66,8 +66,18 @@ public class Band extends Artist {
     /**Stuff refered to the values of the band members.
      * Please do a decent descign because right now it sucks.
      */
+    public void addMember(String pMember) {
+        
+    }
+
+
     public ArrayList <String> getMembers() {
         return members;
+    }
+
+    public boolean hasMember(String pMember) {
+        // TODO: YA sabes que hacer.
+        return false;
     }
 
 

@@ -276,11 +276,6 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     }
 
 
-
-
-
-
-
     /**Special methods that are override. Very useful really. */
     @Override
     public String toString() {

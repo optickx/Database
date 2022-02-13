@@ -4,13 +4,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Album implements Comparable <Album> {
-    public String name;
+    private String name;
     public LocalDate released;
     //Collection attributes.
-    public ArrayList <Song> trackList;
-    public ArrayList <String> genres = new ArrayList <String> ();
-    public ArrayList <String> personnel = new ArrayList <String> ();
-
+    private ArrayList <Song> trackList;
+    private ArrayList <String> genres = new ArrayList <String> ();
     //Constructors.
 
     /**The name of the album is not unique I guess.
