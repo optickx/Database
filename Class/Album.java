@@ -45,12 +45,8 @@ public class Album implements Comparable <Album> {
         return released;
     }
     public int getLength() {
-        int total = 0;
-        for (Song s : trackList) 
-            total += s.getLength();
-        return total;
+        return trackList.stream().mapToInt(Song::getLength).sum();
     }
-
 
     // Tracklist.
 
@@ -93,18 +89,26 @@ public class Album implements Comparable <Album> {
         return ans;
     }
 
-    public ArrayList <Song> searchByTitle(String pTitle) {
+
+    /**@return A list of all the songs in the album
+     * whose title matches the parameter. Uses a pattern
+     * to see if the String is contained.
+     */
+    public ArrayList <Song> searchSongsByTitle(String pTitle) {
         ArrayList <Song> search = new ArrayList <Song> ();
         for (Song s : trackList)
-            if (s.getTitle().contains(pTitle)) //TODO: improve this shit.
+            if (s.getTitle().contains(pTitle)) 
                 search.add(s);
+
+        /* TODO: improve this shit. 
+        Make a pattern and a match to search all the songs
+        that contain the words of the title in any order.*/
         return search;
     }
 
     
-    /**Comparators by different values. Used later to 
+    /* Comparators by different values. Used later to 
      * sort the discography of an artist more easily.
-    * @see Artist
     */
     @Override
     public int compareTo(Album pAlbum) {

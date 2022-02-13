@@ -1,26 +1,29 @@
 package Database.Class;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Concert {
+public class Concert implements Serializable, Comparable <Concert> {
 	
 	private final int ID; // primary key.
-	private final int aID; // primary key of the artist very importantt!!!! ---------------------------------------
+	private final int aID; // primary key of the artist.
 	private LocalDate date;
 	private String place;
-	private String openingAct; // ID of an artist.
 	private String description;
 	private float price;
 	// Collection.
-	private ArrayList <String> artists = new ArrayList <String>();
-
-	/*TODO: Considerar que es un festival 
-	si tiene más de dos artistas distintos.
-	*/
+	private ArrayList <Integer> artists = new ArrayList <Integer>();
 	
-	/**Primary constructor. */
+	// Constructors. TODO: Es un festival si tiene más de dos artistas distintos.
 	
+	/**Original constructor. Uses all the obligatory
+	 * attributes of the class.
+	 * @param pID unique primary key of the concert.
+	 * @param pAID unique primary key of the artist.
+	 * @param pDate date of the concert.
+	 * @param pPlace place of the concert.
+	*/	
 	public Concert(
 	int pID, int pAID, LocalDate pDate, String pPlace) {
 		ID = pID;
@@ -28,103 +31,104 @@ public class Concert {
 		date = pDate;
 		place = pPlace;
 	}
+
+
 	/**Calls the original constructor 
 	 * and adds new parameters.
 	 * @param pDescription
-	 * @param pOpening
 	 * @param pPrice
 	 */
 	public Concert(
-	int pID, int pAID, LocalDate pDate, String pPlace,
-	String pOpeningAct, String pDescription, float pPrice) {
+	int pID, int pAID, LocalDate pDate, 
+	String pPlace, String pDescription, float pPrice) {
 		this(pID, pAID, pDate, pPlace);
-		openingAct = pOpeningAct;
 		description = pDescription;
 		price = pPrice;
 	}
 
+	// Setters.
+
+	public void setDate(LocalDate pDate) {
+		date = pDate;
+	}
+	public void setPlace(String pPlace) {
+		place = pPlace;
+	}
+	public void setDescription(String pDescription) {
+		description = pDescription;
+	}
+	public void setPrice(float pPrice) {
+		if (pPrice >= 0) price = pPrice;
+	}
+
+	// Getters.
 
 	public int getID() {
 		return ID;
 	}
-
-	public int getaID() {
+	public int getAID() {
 		return aID;
 	}
-
-
 	public LocalDate getDate() {
 		return date;
 	}
-
-
-	public void setDate(LocalDate date) {
-		this.date = date;
-	}
-
-
 	public String getPlace() {
 		return place;
 	}
-
-
-	public void setPlace(String place) {
-		this.place = place;
-	}
-
-
-	public String getOpeningAct() {
-		return openingAct;
-	}
-
-
-	public void setOpeningAct(String openingAct) {
-		this.openingAct = openingAct;
-	}
-
-
 	public String getDescription() {
 		return description;
 	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
 	public float getPrice() {
 		return price;
 	}
 
 
-	public void setPrice(float price) {
-		this.price = price;
+	/**Adds a new ID to the ArrayList of artists'
+	 * primary keys. 
+	 * @param pAID If the ID is the ID of the 
+	 * principal artist who played in that concert, 
+	 * then the value is not added.
+	 */
+	public void addArtist(int pAID) {
+		if (!artists.contains(pAID) && (pAID != aID))
+			artists.add(pAID);
 	}
-
-
-	public ArrayList<String> getArtists() {
-		return artists;
+	/**Before returning the Array, the value of the 
+	 * principal artist is added to it. Is it correct?
+	 */
+	public ArrayList <Integer> getArtists() {
+		ArrayList <Integer> ans = new ArrayList <Integer> ();
+		ans.add(0, aID);
+		return ans;
 	}
-
-
-	public void setArtists(ArrayList<String> artists) {
-		this.artists = artists;
-	}
-
 
 	@Override
 	public String toString() {
-		String r = "El concierto tuvo lugar en " + date.getYear() + ", el " + date.getDayOfMonth() + " de " +date.getMonth();
+		return "El concierto tuvo lugar el "
+			+ date.getDayOfMonth() + " de "
+			+ date.getMonth() + " de "
+			+ date.getYear() + ". La actuación";
+	}
 
-		return r;
 
+	/**Very useful to design comparators in case of having
+	 * concerts stored in a collection.
+	 */
+	@Override
+	public int compareTo(Concert pConcert) {
+		// TODO Auto-generated method stub
+		return pConcert.getDate().compareTo(date);
 	} 
+
+	public int compareDate(Concert pConcert) {
+		return pConcert.getDate().compareTo(date);
+	}
 	
-	
-	
-	
-	
-	
-	
+	public int comparePlace(Concert pConcert) {
+		return pConcert.getPlace().compareToIgnoreCase(place);
+	}
+
+	public int comparePrice(Concert pConcert) {
+		return (int) (pConcert.getPrice() - price);
+	}
 }

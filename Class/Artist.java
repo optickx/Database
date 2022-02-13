@@ -96,9 +96,10 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     
     /**Checks if any name stored in the
      * artist matches with the parameter.
+     * @param pPseudonym
     */
     public void addPseudonym(String pPseudonym) {
-        if (!name.equals(pPseudonym) && !isKnownAs(pPseudonym))
+        if (!name.equalsIgnoreCase(pPseudonym) && !isKnownAs(pPseudonym))
             // cannot be the value of the name.
             aka.add(pPseudonym);
     }
@@ -111,10 +112,9 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
         String ans = "";
         if (aka.isEmpty())
             // message text. the value of name is constant.
-            ans = name + " doesn't have any other name.";
+            ans = name + " doesn't have any pseudonyms.";
         else 
-            for (String p : aka) 
-                ans += p + ", ";   
+            for (String p : aka) ans += p + ", ";   
         return ans;
     }
 
@@ -129,8 +129,7 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
         // TODO: improve the code by using lambda functions.
         Iterator <String> itr = aka.iterator();
         while (!ans && itr.hasNext()) 
-            if (itr.next().equalsIgnoreCase(pPseudonym))
-                ans = true;
+                ans = itr.next().equalsIgnoreCase(pPseudonym);
         return ans;
     }
 
@@ -153,7 +152,7 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     public String getGenres() {
         String ans = "";
         if (genres.isEmpty())
-            ans = "Doesn't have any genre stored.";
+            ans = name + "doesn't have any genres stored.";
         else 
             for (String g : genres) ans += g + ", ";
         return ans;
@@ -180,14 +179,11 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * @param pAlbum has to be instanced.
     */
     public void addAlbum(Album pAlbum) {
-        if (!isAuthorOf(pAlbum.getName())) 
+        if (!isAuthorOf(pAlbum)) 
             discography.add(pAlbum);
         else 
             System.out.println("The album " + pAlbum.getName() + 
                 " is already in " + name + "'s discography.");
-        /*TODO: Create a comparison between albums
-        taking many attributes to tell if they're the
-        "same". Lambda functions baby.*/
     }
 
 
@@ -200,28 +196,31 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
         for (Album a : discography) 
             if (a.getYear() == pYear)
                 albumsFiltered.add(a);
-        return albumsFiltered;
-        // TODO: use a filter with streams.
+        if (albumsFiltered.size() == 0)
+            return null;
+        else 
+            return albumsFiltered;
     }
 
     /**Sorts before returning the album. The change is permanent.
      * @return the first album by year.
      */
     public Album getDebutAlbum() {
-        Collections.sort(discography);
-        //TODO: The list could be empty stupid. Check that.
+        Collections.sort(discography); 
+        // the values are technically able to be sorted.
         return discography.get(0);
     }
 
 
     /**Returns a boolean if the name is
      * stored in the collection of pseudonyms. 
-     * @param pName has to be the name of the album.
+     * @param pAlbum has to be the name of the album.
      * Ignores case.
      */
-    private boolean isAuthorOf(String pName) {
+    private boolean isAuthorOf(Album pAlbum) {
         for (Album a : discography)
-            if (a.getName().equalsIgnoreCase(pName))
+            if (a.getName().equalsIgnoreCase(pAlbum.getName())
+            && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
                 return true;        
         return false;
     }
@@ -258,20 +257,31 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * @see Artist
      */
     public void addConcert(Concert pConcert) {
-        //TODO: any concert you add to the database is suposed to be from this artist.
-        if (pConcert.getaID() == ID)
+        if (pConcert.getAID() == ID)
             ConcertsDatabase.addConcert(pConcert);
     }
 
-    /**Returns all the concerts from an artist that match
-     * the value of the primary key.
-     */
-    public ArrayList <Concert> getConcerts() {
-        // uses the primary key of the artist.
-        // should send the ID to whatever method you call.
-        return ConcertsDatabase.searchConcertsFromArtist(ID);
+
+    /**Show all the concerts sorted. Calling to the databse*/
+    public ArrayList <Concert> sortConcertsBy() {
+        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(ID);
+        return concerts;
     }
 
+    public ArrayList <Concert> sortConcertsByYear() {
+        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(ID);
+        concerts.stream()
+            .sorted((a1, a2) -> a1.compareDate(a2));
+        return concerts;
+    }
+
+
+
+
+
+
+
+    /**Special methods that are override. Very useful really. */
     @Override
     public String toString() {
         // TODO: Return all the data of an artist.
