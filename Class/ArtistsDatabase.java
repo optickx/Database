@@ -80,7 +80,7 @@ public abstract class ArtistsDatabase {
             try {
                 ois = new ObjectInputStream(new FileInputStream(f));
                 int length = Util.fileLength(f);
-                Concert aux;
+                //Concert aux;
                 for (int i = 0; i < length; i++) {
                     a = (Artist) ois.readObject();
                     if (a.getID() == pID)

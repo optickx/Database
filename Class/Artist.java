@@ -88,18 +88,19 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
             if (getDebutAlbum().getYear() < debut.getYear())
                 d = getDebutAlbum().getYear();
         else d = debut.getYear();
-        // the value is not updated.
+        // the value is not updated. only-read.
         return d;
     }
 
     // Pseudonyms.
     
-    /**Checks if any name stored in the
-     * artist matches with the parameter.
+    /**Checks if any name stored in the artist
+     * matches with the parameter before adding.
      * @param pPseudonym
     */
     public void addPseudonym(String pPseudonym) {
-        if (!name.equalsIgnoreCase(pPseudonym) && !isKnownAs(pPseudonym))
+        if (!name.equalsIgnoreCase(pPseudonym) 
+        && !isKnownAs(pPseudonym))
             // cannot be the value of the name.
             aka.add(pPseudonym);
     }
@@ -125,12 +126,11 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * @param pPseudonym Ignores case.
      */
     private boolean isKnownAs(String pPseudonym) {
-        boolean ans = false;
-        // TODO: improve the code by using lambda functions.
-        Iterator <String> itr = aka.iterator();
-        while (!ans && itr.hasNext()) 
-                ans = itr.next().equalsIgnoreCase(pPseudonym);
-        return ans;
+        Optional <String> ans = 
+            aka.stream()
+                .filter(p -> p.equalsIgnoreCase(pPseudonym))
+                .findAny();
+        return ans.isPresent();
     }
 
     // Genres.
@@ -140,9 +140,10 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * @param pGenre Ignores case.
     */
     public void addGenres(String pGenre) {
-        if (!plays(pGenre))
+        if (!playsGenre(pGenre))
             genres.add(pGenre);
     }
+
 
 
     /**
@@ -164,12 +165,12 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * stored in the collection of pseudonyms. 
      * @param pGenre Ignores case.
      */
-    private boolean plays(String pGenre) {
-        boolean ans = false;
-        Iterator <String> itr = genres.iterator();
-        while (!ans && itr.hasNext()) 
-            ans = (itr.next().equalsIgnoreCase(pGenre));
-        return ans;
+    private boolean playsGenre(String pGenre) {
+        Optional <String> ans = 
+            genres.stream()
+                .filter(g -> g.equalsIgnoreCase(pGenre))
+                .findFirst();
+        return ans.isPresent();
     }
 
     // Discography.
@@ -192,25 +193,29 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * albums from the selected year. 
      */
     public ArrayList <Album> getAlbumsFromYear(int pYear) {
-        ArrayList <Album> albumsFiltered = new ArrayList <Album> ();
-        for (Album a : discography) 
-            if (a.getYear() == pYear)
-                albumsFiltered.add(a);
-        if (albumsFiltered.size() == 0)
+        ArrayList <Album> filtered = new ArrayList <Album> ();
+        for (Album al : discography) 
+            if (al.getYear() == pYear)
+            filtered.add(al);
+        if (filtered.size() == 0)
             return null;
         else 
-            return albumsFiltered;
+            return filtered;
     }
+
 
     /**Sorts before returning the album. The change is permanent.
      * @return the first album by year.
      */
-    public Album getDebutAlbum() {
-        Collections.sort(discography); 
+    public Album getDebutAlbum() {            
+        Optional <Album> ans = 
+        discography
+            .stream()
+            .min(Comparator.comparing(Album::getReleasingDate));
         // the values are technically able to be sorted.
-        return discography.get(0);
+        return ans.get();
     }
-
+    
 
     /**Returns a boolean if the name is
      * stored in the collection of pseudonyms. 
@@ -218,31 +223,42 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * Ignores case.
      */
     private boolean isAuthorOf(Album pAlbum) {
-        for (Album a : discography)
-            if (a.getName().equalsIgnoreCase(pAlbum.getName())
-            && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
-                return true;        
-        return false;
+        Optional <Album> ans = 
+        discography.stream()
+            .filter(a -> a.getName().equalsIgnoreCase(pAlbum.getName())
+                && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
+            .findFirst();
+            return ans.isPresent();
     }
 
 
-    /* To make the process easier, albums are comparable. 
+    /**To make the process easier, albums are comparable. 
      * Albums implement the Comparable interface. Important
      * to note that the default comparator compares the releasing
-     *  date of an album, but it's easier to compare by year.
+     * date of an album, but it's easier to compare by year.
+     * @param pOption
      */
-    public void sortAlbumsByYear() {
-        discography.stream()
-        .sorted((a1, a2) -> a1.compareYear(a2));
+    public ArrayList <Album> getAlbumsSorted(int pOption) {
+        switch (pOption) {
+            case 1:
+                discography.stream()
+                    .sorted((a1, a2) -> a1.compareYear(a2));
+                break; 
+            case 2:
+                discography.stream()
+                    .sorted((a1, a2) -> a1.compareName(a2));
+                break;
+            case 3:
+                discography.stream()
+                    .sorted((a1, a2) -> a1.compareLength(a2));
+                break;
+            default:
+                Collections.sort(discography);
+                break;
+        }
+        return discography;
     }
-    public void sortAlbumsByName() {
-        discography.stream()
-        .sorted((a1, a2) -> a1.compareName(a2));
-    }
-    public void sortAlbumsByLength() {
-        discography.stream()
-        .sorted((a1, a2) -> a1.compareLength(a2));
-    }
+
 
     // Concerts management.   
    
@@ -251,11 +267,10 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     * of the concerts, they should be stored inside an ArrayList.
     * @see Concert being serializable objects
     * @see ConcertsDatabase beng a static class(?)
-    */
-    /**Adds a concert if and only if the Artist ID from the Concert
+    * A concert is added if and only if the Artist ID from the Concert
      * matches this ID. 
      * @see Artist
-     */
+    */
     public void addConcert(Concert pConcert) {
         if (pConcert.getAID() == ID)
             ConcertsDatabase.addConcert(pConcert);

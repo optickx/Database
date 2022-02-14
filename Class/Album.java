@@ -2,10 +2,11 @@ package Database.Class;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Album implements Comparable <Album> {
     private String name;
-    public LocalDate released;
+    private LocalDate released;
     //Collection attributes.
     private ArrayList <Song> trackList;
     private ArrayList <String> genres = new ArrayList <String> ();
@@ -79,12 +80,11 @@ public class Album implements Comparable <Album> {
      * @param pSong has to be instanciated.
      */
     public boolean containsSong(Song pSong) {
-        boolean ans = false;
-        for (Song s : trackList) 
-            if (s.getTitle().equals(pSong.getTitle()) &&
-                s.getLength() == pSong.getLength())
-                    ans = true;
-        return ans;
+        Optional <Song> ans = trackList.stream().filter(
+            s -> s.getTitle().equalsIgnoreCase(pSong.getTitle()) &&
+            s.getLength() == pSong.getLength())
+            .findFirst();
+        return ans.isPresent();
     }
 
 
@@ -129,6 +129,9 @@ public class Album implements Comparable <Album> {
 
     @Override
     public String toString() {
-        return "Shitty text explaining an album.";
+        return name + " was released the " + 
+        released.getDayOfMonth() + " of " + 
+        released.getMonth() + " of " + 
+        released.getYear() + ".";
     }
 }
