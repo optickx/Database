@@ -16,8 +16,8 @@ public class Band extends Artist {
      * @see Artist
      */
     public Band(
-            int pID, String pName,
-            boolean pActive, LocalDate pDebut) {
+    int pID, String pName,
+    boolean pActive, LocalDate pDebut) {
         super(pID, pName, pActive, pDebut);
     }
 
@@ -26,8 +26,8 @@ public class Band extends Artist {
      * @param pLabel
      */
     public Band(
-            int pID, String pName, String pLabel,
-            boolean pActive, LocalDate pDebut) {
+    int pID, String pName, String pLabel,
+    boolean pActive, LocalDate pDebut) {
         super(pID, pName, pLabel, pActive, pDebut);
     }
 
@@ -39,8 +39,8 @@ public class Band extends Artist {
      * @param pDescription is included.
      */
     public Band(
-            int pID, String pName, String pLabel,
-            boolean pActive, LocalDate pDebut, String pDescription) {
+    int pID, String pName, String pLabel,
+    boolean pActive, LocalDate pDebut, String pDescription) {
         super(pID, pName, pLabel, pActive, pDebut);
         setDescription(pDescription);
     }
@@ -64,10 +64,11 @@ public class Band extends Artist {
      */
 
     /**Stuff refered to the values of the band members.
-     * Please do a decent descign because right now it sucks.
+     * Please do a decent design because right now it sucks.
      */
     public void addMember(String pMember) {
-        
+        if(!hasMember(pMember))
+            members.add(pMember);
     }
 
 
@@ -75,27 +76,21 @@ public class Band extends Artist {
         return members;
     }
 
+    public String getMembersNames() {
+        String ans = "";
+        for (String m : members) 
+            ans += m + ", ";
+        
+       return ans;
+    }
+
     public boolean hasMember(String pMember) {
-        // TODO: YA sabes que hacer.
-        return false;
+        boolean ans = false;
+        for (int i = 0; i < members.size() && !ans; i++) 
+            if (members.get(i).equalsIgnoreCase(pMember))
+                ans = true;
+        
+        return ans;
     }
 
-
-    /**
-     * Private internal auxiliar class, suposed to
-     * be helpful, but probably will have to be removed.
-     * @see Artist
-     */
-    public class Musician implements Serializable {
-        // Do not forget to make the class private.
-        private String name;
-
-        public Musician(String pName) {
-            name = pName;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
 }

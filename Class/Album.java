@@ -115,7 +115,7 @@ public class Album implements Comparable <Album> {
     }
     public int compareYear(Album pAlbum) {
         // comparator by year.
-        return getYear()- pAlbum.getYear();   
+        return getYear() - pAlbum.getYear();   
     }
     public int compareName(Album pAlbum) {
         // comparator by name.
