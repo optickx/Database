@@ -134,10 +134,6 @@ public abstract class ArtistsDatabase {
                             listado.add(a);
                             // TODO: 
                     }
-                
-
-
-
                 } catch (FileNotFoundException fnfe) {
                     System.out.println("File not found.");
                 } catch (Exception e) {
