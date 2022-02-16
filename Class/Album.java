@@ -110,6 +110,18 @@ public class Album implements Comparable <Album> {
         return search;
     }
 
+
+    /**
+     * 
+     */
+    public String getSongsName() {
+        String ans = "";
+        for (Song s : trackList) {
+            ans += s.toString();
+        }
+        return ans;
+    }
+
     
     /* Comparators by different values. Used later to 
      * sort the discography of an artist more easily.
