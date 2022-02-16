@@ -215,6 +215,26 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
         // the values are technically able to be sorted.
         return ans.get();
     }
+
+
+    /**This method returns the longest album
+     * the artist has ever made.
+     */
+    public Album getLongestAlbum() {
+        /*Optional <Album> ans = 
+            discography.stream()
+                .max(Comparator.comparing(Album::getLength));*/
+
+        int min = getLongestAlbum().getLength();
+        Album ans = null;
+        for (Album a : discography) {
+            if (a.getLength() < min) {
+                min = a.getLength();
+                ans = a;
+            }
+        }
+        return ans;
+    }
     
 
     /**Returns a boolean if the name is
@@ -229,6 +249,19 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
                 && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
             .findFirst();
             return ans.isPresent();
+    }
+
+
+    /**
+     * @param pOption
+     * @return
+     */
+    public ArrayList <Song> hasSongsWithName(String pTitle) {
+        ArrayList <Song> songs = new ArrayList <Song> ();
+        for (Album a : discography) 
+            if (a.containsSong(pTitle)) 
+                songs.addAll(a.getSongsWithName(pTitle));
+        return songs;
     }
 
 

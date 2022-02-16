@@ -86,13 +86,19 @@ public class Album implements Comparable <Album> {
             .findFirst();
         return ans.isPresent();
     }
+    public boolean containsSong(String pTitle) {
+        Optional <Song> ans = trackList.stream().filter(
+            s -> s.getTitle().equalsIgnoreCase(pTitle))
+            .findFirst();
+        return ans.isPresent();
+    }
 
 
     /**@return A list of all the songs in the album
      * whose title matches the parameter. Uses a pattern
      * to see if the String is contained.
      */
-    public ArrayList <Song> searchSongsByTitle(String pTitle) {
+    public ArrayList <Song> getSongsWithName(String pTitle) {
         ArrayList <Song> search = new ArrayList <Song> ();
         for (Song s : trackList)
             if (s.getTitle().contains(pTitle)) 
