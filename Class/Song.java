@@ -1,6 +1,6 @@
 package Database.Class;
 
-public class Song {
+public class Song implements Comparable <Song> {
 
 	private int number; // unique value.
 	private String title;
@@ -30,6 +30,10 @@ public class Song {
 	public int getLength() {
 		return length;
 	}
+	public String getLengthMinutes() {
+		// TODO: jajan't
+		return "";
+	}
 	public void setLength(int pLength) {
 		length = pLength;
 	}
@@ -37,12 +41,12 @@ public class Song {
 
 	@Override
 	public String toString() {
-		//TODO: todo el codigo bro.
-		return "";
+		return number + " " + title + " " + getLengthMinutes();
 	}
-	
-	
-	
-	
-	
+
+
+	@Override
+	public int compareTo(Song pSong) {
+		return pSong.getLength() - length;
+	}
 }

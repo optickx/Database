@@ -30,7 +30,7 @@ public abstract class ArtistsDatabase {
 
     public static void addArtist(Artist pArtist) {
         try {
-            if (f.exists()) {
+            if (f.exists()) 
                 if (!isContained(pArtist.getID())) {
                     MyObjectOutputStream moos = new MyObjectOutputStream();
                     moos.writeObject(pArtist);
@@ -40,15 +40,10 @@ public abstract class ArtistsDatabase {
                     oos.writeObject(pArtist);
                     oos.close();
                 }
-            } else {
-                // TODO: Create a new file to add the values.
-            }
         } catch (Exception e) {
-            System.out.println("There was some sort of error.");
+            print("Error.");  
         }
     }
-
-
 
     private static void deleteArtist(int pID) {
         int sino = 0;
@@ -70,7 +65,7 @@ public abstract class ArtistsDatabase {
                 ois.close();
                 fis.close();
             } catch (FileNotFoundException e) {
-                System.out.println("File not found." );
+                System.out.println("File not found.");
             } catch (IOException e) {
                 System.out.println(" ");
             } catch (ClassNotFoundException e) {
@@ -266,8 +261,7 @@ public abstract class ArtistsDatabase {
         return a;
     }
 
-
-    public static void searchSongsByTitle(){
+    public static void searchSongsByTitle() {
         print("¿Cuál es el título de la canción que quieres buscar?");
         String pTitle = Util.readText();
 
@@ -279,7 +273,7 @@ public abstract class ArtistsDatabase {
             try {
                 ois = new ObjectInputStream(new FileInputStream(f));
                 int length = Util.fileLength(f);
-                //Concert aux;
+                // Concert aux;
                 for (int i = 0; i < length; i++) {
                     a = (Artist) ois.readObject();
                     if (a.hasSongsWithName(pTitle) != null)
@@ -296,11 +290,8 @@ public abstract class ArtistsDatabase {
             } catch (IOException e) {
                 System.out.println("Error closing the file.");
             }
-        }     
+        }
     }
-
-
-
 
     private static void alta() { // TODO
         print("¿Quieres meter una banda o un artista en solitario? [b/s]");
@@ -385,37 +376,34 @@ public abstract class ArtistsDatabase {
         return 0;
     }
 
-
-    /*ObjectInputStream ois = null;
-        Artist a = null;
-
-        if (!f.exists()) {
-            try {
-                ois = new ObjectInputStream(new FileInputStream(f));
-                int length = Util.fileLength(f);
-                //Concert aux;
-                for (int i = 0; i < length; i++) {
-                    a = (Artist) ois.readObject();
-                    if (a.getID() == pID)
-                        break;
-                }
-
-            } catch (FileNotFoundException fnfe) {
-                System.out.println("File not found.");
-            } catch (Exception e) {
-                System.out.println("Well, something went wrong because files in java suck. What else can I say?");
-            }
-            try {
-                ois.close();
-            } catch (IOException e) {
-                System.out.println("Error closing the file.");
-            
-    */
-
-
-
-
-
+    /*
+     * ObjectInputStream ois = null;
+     * Artist a = null;
+     * 
+     * if (!f.exists()) {
+     * try {
+     * ois = new ObjectInputStream(new FileInputStream(f));
+     * int length = Util.fileLength(f);
+     * //Concert aux;
+     * for (int i = 0; i < length; i++) {
+     * a = (Artist) ois.readObject();
+     * if (a.getID() == pID)
+     * break;
+     * }
+     * 
+     * } catch (FileNotFoundException fnfe) {
+     * System.out.println("File not found.");
+     * } catch (Exception e) {
+     * System.out.
+     * println("Well, something went wrong because files in java suck. What else can I say?"
+     * );
+     * }
+     * try {
+     * ois.close();
+     * } catch (IOException e) {
+     * System.out.println("Error closing the file.");
+     * 
+     */
 
     private static void print(Object obj) {
         System.out.print(obj);

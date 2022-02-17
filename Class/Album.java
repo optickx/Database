@@ -2,6 +2,7 @@ package Database.Class;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 public class Album implements Comparable <Album> {
@@ -55,13 +56,11 @@ public class Album implements Comparable <Album> {
      * the value of the attribute number might be modified.
     */
     public void addSong(Song pSong) {//TODO: check the values of the track number.
-        if (pSong.getNumber() > trackList.size()) {
-            //pSong.setNumber(trackList.size());TODO: Change value of the tracknumber 
+        if (pSong.getNumber() > trackList.size()) 
+            //pSong.setNumber(trackList.size());
             trackList.add(pSong);
-        }
-        else {
-
-        }
+        //TODO: Change value of the tracknumber 
+       
     }
 
     /**Method that gives each song a unique number 
@@ -69,8 +68,9 @@ public class Album implements Comparable <Album> {
      * Has to match their indexes.
      */
     public void updateTrackNumbers() {
-        // TODO: implement this shit with lambda functions.
-        //Collections.sort(trackList);
+        Collections.sort(trackList);
+        for (int i = 0; i < trackList.size(); i++) 
+            trackList.get(i).setNumber(i);
     }
 
 
@@ -103,16 +103,14 @@ public class Album implements Comparable <Album> {
         for (Song s : trackList)
             if (s.getTitle().contains(pTitle)) 
                 search.add(s);
-
-        /* TODO: improve this shit. 
-        Make a pattern and a match to search all the songs
+        /*Make a pattern and a match to search all the songs
         that contain the words of the title in any order.*/
         return search;
     }
 
 
-    /**
-     * 
+    /**@return all the data of the songs contained 
+     * inside the tracklist of the album.
      */
     public String getSongsName() {
         String ans = "";
@@ -145,11 +143,24 @@ public class Album implements Comparable <Album> {
     } 
 
 
+    /**@return a String that contains all 
+     * the albums (if any) an artist has in their 
+     * discography.
+     */
+    public String getSongs() {
+        String ans = "";
+        for (Song s : trackList) 
+            ans += s.toString() + "\n";
+        return ans;
+    }
+
+
     @Override
     public String toString() {
-        return name + " was released the " + 
-        released.getDayOfMonth() + " of " + 
-        released.getMonth() + " of " + 
-        released.getYear() + ".";
+        return 
+            name + " was released the " + released.getDayOfMonth() +
+            " of " + released.getMonth() + " of " + released.getYear() +
+            "The album is considered from the genres of "  +
+            "Here's the songs from the album:\n" + getSongs() + "\n";
     }
 }

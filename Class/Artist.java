@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public abstract class Artist implements Comparable <Artist>, Serializable{
     private final int ID; // primary key
     private String name; 
-    private String label;
+    private String label = null;
     private boolean active; 
     private LocalDate debut; 
     //Colection type attributes.
@@ -183,7 +183,8 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
         if (!isAuthorOf(pAlbum)) 
             discography.add(pAlbum);
         else 
-            System.out.println("The album " + pAlbum.getName() + 
+            System.out.println(
+                "The album " + pAlbum.getName() + 
                 " is already in " + name + "'s discography.");
     }
 
@@ -248,7 +249,7 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
             .filter(a -> a.getName().equalsIgnoreCase(pAlbum.getName())
                 && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
             .findFirst();
-            return ans.isPresent();
+        return ans.isPresent();
     }
 
 
@@ -327,8 +328,21 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     /**Special methods that are override. Very useful really. */
     @Override
     public String toString() {
-        // TODO: Return all the data of an artist.
-        return "All this shitty text explaining the artist";
+        String ans = "", dLabel = "", dActive = name + " is ";
+
+        if (label != null) 
+            dLabel = "\nThe label of the artist is" + label + ".";
+        
+        if (active)
+            dActive += " still active.";
+        else
+            dActive += "not still active.";
+
+        ans = 
+            "\nName of the artist: " + name + "." + 
+            dLabel + dActive;
+            
+        return ans;
     }
 
     @Override

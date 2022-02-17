@@ -37,8 +37,7 @@ public abstract class ConcertsDatabase {
                     oos.writeObject(pConcert);
                     oos.close();
                 }
-            }
-            else {
+            } else {
                 // TODO: Create a new file to add the values.
             }
         } catch (Exception e) {
@@ -46,9 +45,9 @@ public abstract class ConcertsDatabase {
         }
     }
 
-    
     /**
      * Private and auxiliar method to add a concert to the database.
+     * 
      * @param pCode
      * @return boolean indicating if the concert is already.
      */
@@ -75,15 +74,73 @@ public abstract class ConcertsDatabase {
      *              will be deleted only if it's contained inside the
      *              databse.
      */
-    public static void deleteConcert(int pCode) {
-        // TODO do stuff
+    public static void deleteConcert(int pID) {
+        char sino = 's';
+        if (!f.exists()) {
+            System.out.println("No hay conciertos para borrar.");
+        } else {
+            // Volcado del fichero a un ArrayList
+            int cont = Util.fileLength(f);
+            ArrayList<Concert> concerts = new ArrayList<Concert>(cont);
+            FileInputStream fis = null;
+            ObjectInputStream ois = null;
+            try {
+                fis = new FileInputStream(f);
+                ois = new ObjectInputStream(fis);
+                for (int i = 0; i < cont; i++) {
+                    concerts.add(i, (Concert) ois.readObject());
+                }
+                ois.close();
+                fis.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found.");
+            } catch (IOException e) {
+                System.out.println(" ");
+            } catch (ClassNotFoundException e) {
+                System.out.println("Error en la lectura de datos.");
+            }
+            // Tratamiento del ArrayList como hacíamos en la 2ª evaluación
+            for (int i = 0; i < concerts.size(); i++) {
+                if (concerts.get(i).getID() == pID) {
+                   System.out.println(concerts.get(i));
+                    System.out.println("¿Está seguro de que desea borrar este concierto? [s/n]");
+                    sino = Util.readChar('s', 'n');
+                    if (sino == 's') {
+                        concerts.remove(i);
+                        System.out.println("Concierto borrado correctamente");
+                        break;
+                    }
+                }
+            }
+            if (sino == 0) {
+                System.out.println("No se ha podido borrar ya que no se ha encontrado");
+            } else if (sino == 2) {
+                System.out.println("Operación de borrado abortada");
+            } else {
+                // Se han realizado cambios, por lo que volcamos el ArrayList modificado en el
+                // fichero (machacándolo)
+                try {
+                    FileOutputStream fos = new FileOutputStream(f);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    for (int i = 0; i < cont - 1; i++) {
+                        oos.writeObject(concerts.get(i));
+                    }
+                    oos.close();
+                    fos.close();
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found.");
+                } catch (IOException e) {
+                    System.out.println(" ");
+                }
+            }
+        }
     }
 
-
-    /**The only way of obtaining concerts from the Database if
+    /**
+     * The only way of obtaining concerts from the Database if
      * by using the ID of an artist.
      */
-    public static ArrayList<Concert> getConcerts(int pAID) { 
+    public static ArrayList<Concert> getConcerts(int pAID) {
         ObjectInputStream ois = null;
         ArrayList<Concert> ans = new ArrayList<Concert>();
 
@@ -112,9 +169,10 @@ public abstract class ConcertsDatabase {
         return ans;
     }
 
-
-    /**ALl the concert with the same ID of the concert will be changed.
+    /**
+     * ALl the concert with the same ID of the concert will be changed.
      * Theoretically, there's only one concert with that ID.
+     * 
      * @param pConcert
      */
     public static void modifyConcert(Concert pConcert) {
@@ -125,7 +183,7 @@ public abstract class ConcertsDatabase {
             ObjectOutputStream oos = null;
             FileInputStream fis = null;
             ObjectInputStream ois = null;
-            
+
             File auxFile = new File("auxiliar.dat");
             try {
                 // the auxiliar file to store data is created.
@@ -142,13 +200,12 @@ public abstract class ConcertsDatabase {
                         aux = pConcert;
                         done = true;
                     }
-                        
+
                     oos.writeObject(aux);
-                    
+
                 } while (aux != null);
-            } 
-            
-            
+            }
+
             catch (FileNotFoundException e) {
                 System.out.println("File not found.");
             } catch (IOException e) {
@@ -174,8 +231,6 @@ public abstract class ConcertsDatabase {
         }
     }
 
-
-
     public static void delete(int pID) {
         if (f.exists()) {
             boolean done = false;
@@ -184,7 +239,7 @@ public abstract class ConcertsDatabase {
             ObjectOutputStream oos = null;
             FileInputStream fis = null;
             ObjectInputStream ois = null;
-            
+
             File auxFile = new File("auxiliar.dat");
             try {
                 // the auxiliar file to store data is created.
@@ -198,13 +253,12 @@ public abstract class ConcertsDatabase {
                 do {
                     aux = (Concert) ois.readObject();
                     if (pID != aux.getID()) {
-                        oos.writeObject(aux);                        
+                        oos.writeObject(aux);
                         done = true;
                     }
                 } while (aux != null);
-            } 
-            
-            
+            }
+
             catch (FileNotFoundException e) {
                 System.out.println("File not found.");
             } catch (IOException e) {
