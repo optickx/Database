@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 
 public abstract class Artist implements Comparable <Artist>, Serializable{
+    
     private final int ID; // primary key
     private String name; 
     private String label = null;

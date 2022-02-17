@@ -1,12 +1,11 @@
 package Database.Class;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class Band extends Artist {
     private String description;
-    private ArrayList <String> members = new ArrayList<String>();
+    private ArrayList <String> members = new ArrayList <String> ();
 
     // Constructors
 

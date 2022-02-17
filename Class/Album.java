@@ -55,12 +55,10 @@ public class Album implements Comparable <Album> {
      * @param pSong
      * the value of the attribute number might be modified.
     */
-    public void addSong(Song pSong) {//TODO: check the values of the track number.
+    public void addSong(Song pSong) {
         if (pSong.getNumber() > trackList.size()) 
-            //pSong.setNumber(trackList.size());
-            trackList.add(pSong);
-        //TODO: Change value of the tracknumber 
-       
+            trackList.add(pSong.getNumber(), pSong);
+        updateTrackNumbers();
     }
 
     /**Method that gives each song a unique number 
@@ -69,6 +67,7 @@ public class Album implements Comparable <Album> {
      */
     public void updateTrackNumbers() {
         Collections.sort(trackList);
+        // after sorting the list 
         for (int i = 0; i < trackList.size(); i++) 
             trackList.get(i).setNumber(i);
     }
@@ -86,6 +85,9 @@ public class Album implements Comparable <Album> {
             .findFirst();
         return ans.isPresent();
     }
+    /**Does the same, but only compares the title of the
+     * song when doing the search
+     */
     public boolean containsSong(String pTitle) {
         Optional <Song> ans = trackList.stream().filter(
             s -> s.getTitle().equalsIgnoreCase(pTitle))
@@ -112,15 +114,38 @@ public class Album implements Comparable <Album> {
     /**@return all the data of the songs contained 
      * inside the tracklist of the album.
      */
-    public String getSongsName() {
+    public String getAllSongsInformation() {
         String ans = "";
-        for (Song s : trackList) {
+        for (Song s : trackList) 
             ans += s.toString();
-        }
         return ans;
     }
 
-    
+    public void sortSongsByNumber() {
+        Collections.sort(trackList);
+    }
+    public void sortSongsByTitle() {
+        trackList.stream()
+            .sorted((s1, s2) -> s1.compareTitle(s2));
+    }
+    public void sortSongsByLength() {
+        trackList.stream()
+            .sorted((s1, s2) -> s1.compareLength(s2));
+    }
+
+
+    /**@return a String that contains all 
+     * the albums (if any) an artist has in their 
+     * discography.
+     */
+    public String getSongs() {
+        String ans = "";
+        for (Song s : trackList) 
+            ans += s.toString() + "\n";
+        return ans;
+    }
+
+
     /* Comparators by different values. Used later to 
      * sort the discography of an artist more easily.
     */
@@ -143,24 +168,12 @@ public class Album implements Comparable <Album> {
     } 
 
 
-    /**@return a String that contains all 
-     * the albums (if any) an artist has in their 
-     * discography.
-     */
-    public String getSongs() {
-        String ans = "";
-        for (Song s : trackList) 
-            ans += s.toString() + "\n";
-        return ans;
-    }
-
-
     @Override
     public String toString() {
         return 
             name + " was released the " + released.getDayOfMonth() +
             " of " + released.getMonth() + " of " + released.getYear() +
             "The album is considered from the genres of "  +
-            "Here's the songs from the album:\n" + getSongs() + "\n";
+            "Here's the songs from the album:\n \t" + getSongs() + "\n";
     }
 }
