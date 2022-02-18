@@ -12,7 +12,8 @@ public class App {
             "Captain Beefheart & His Magic Band",
             "Bizarre Records",
             false,
-            LocalDate.of(1966, 1, 1));
+            LocalDate.of(1966, 1, 1),
+            "The most weird but awesome band of the 1960s.");
 
         b.addAlbum(new Album(
                 "Trout Mask Replica",
