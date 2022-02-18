@@ -101,7 +101,7 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     */
     public void addPseudonym(String pPseudonym) {
         if (!name.equalsIgnoreCase(pPseudonym) 
-        && !isKnownAs(pPseudonym))
+        && null == isKnownAs(pPseudonym))
             // cannot be the value of the name.
             aka.add(pPseudonym);
     }
@@ -121,17 +121,33 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     }
 
 
-    /**@return A boolean telling if the value
-     *  parameter is stored in the collection 
-     * of pseudonyms. 
+    /**@return the string if the value is stored
+     *  in the collection of pseudonyms, and 
+     * null in case of not being stored. 
      * @param pPseudonym Ignores case.
      */
-    private boolean isKnownAs(String pPseudonym) {
+    public String isKnownAs(String pPseudonym) {
+        if (name.toLowerCase().contains(pPseudonym.toLowerCase())) 
+            return name;
+
         Optional <String> ans = 
             aka.stream()
-                .filter(p -> p.equalsIgnoreCase(pPseudonym))
+                .filter
+                    (p -> p.toLowerCase()
+                    .contains(pPseudonym.toLowerCase()))
                 .findAny();
-        return ans.isPresent();
+        return ans.get();
+    }
+
+
+    /**This module deletes a given pseudonym
+     * if and only if it's contained in the 
+     * list of pseudonyms. Ignores case.
+     * @param pPseudonym
+     */
+    public void deletePseudonym(String pPseudonym) {
+        if (isKnownAs(pPseudonym)  != null)
+            aka.remove(isKnownAs(pPseudonym));
     }
 
     // Genres.
@@ -141,10 +157,9 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * @param pGenre Ignores case.
     */
     public void addGenres(String pGenre) {
-        if (!playsGenre(pGenre))
+        if (null == playsGenre(pGenre))
             genres.add(pGenre);
     }
-
 
 
     /**
@@ -166,12 +181,23 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
      * stored in the collection of pseudonyms. 
      * @param pGenre Ignores case.
      */
-    private boolean playsGenre(String pGenre) {
+    private String playsGenre(String pGenre) {
         Optional <String> ans = 
             genres.stream()
                 .filter(g -> g.equalsIgnoreCase(pGenre))
                 .findFirst();
-        return ans.isPresent();
+        return ans.get();
+    }
+
+
+    /**Removes the inputted text from the list 
+     * of genres if and only if it's stored.
+     * Ignores case
+     * @param pGenre
+     */
+    public void deleteGenre(String pGenre) {
+        if (null != playsGenre(pGenre))
+            genres.remove(playsGenre(pGenre));
     }
 
     // Discography.
@@ -206,6 +232,17 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     }
 
 
+    /**@return a string with all the information of
+     * all the albums an artist has.
+     */
+    public String getAlbumsInfo() {
+        String ans = "";
+        for (Album a : discography) 
+            ans += a.toString() + "\n";
+        return ans;
+    }
+
+
     /**Sorts before returning the album. The change is permanent.
      * @return the first album by year.
      */
@@ -229,12 +266,11 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
 
         int min = getLongestAlbum().getLength();
         Album ans = null;
-        for (Album a : discography) {
+        for (Album a : discography) 
             if (a.getLength() < min) {
                 min = a.getLength();
                 ans = a;
             }
-        }
         return ans;
     }
     
@@ -251,6 +287,33 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
                 && a.getReleasingDate().equals(pAlbum.getReleasingDate()))
             .findFirst();
         return ans.isPresent();
+    }
+
+
+      /**Returns the album if the name is
+     * stored in the collection of pseudonyms.
+     * Null if not. 
+     * @param pName has to be the name of the album.
+     * Ignores case.
+     */
+    private Album isAuthorOf(String pName) {
+        Collections.sort(discography);
+        Optional <Album> ans = 
+        discography.stream()
+            .filter(a -> a.getName().equalsIgnoreCase(pName))
+            .findFirst();
+        return ans.get();
+    }
+
+
+    /**Removes an album, which has to be selected
+     * externally by name. It's the first album
+     * chronologically to be removed.
+     * @param pName
+     */
+    public void deleteAlbum(String pName) {
+        if (null != isAuthorOf(pName)) 
+            discography.remove(isAuthorOf(pName));
     }
 
 

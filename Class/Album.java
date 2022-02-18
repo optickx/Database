@@ -10,7 +10,6 @@ public class Album implements Comparable <Album> {
     private LocalDate released;
     //Collection attributes.
     private ArrayList <Song> trackList;
-    private ArrayList <String> genres = new ArrayList <String> ();
     //Constructors.
 
     /**The name of the album is not unique I guess.

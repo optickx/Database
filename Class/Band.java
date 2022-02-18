@@ -1,6 +1,8 @@
 package Database.Class;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 import java.time.LocalDate;
 
 public class Band extends Artist {
@@ -21,20 +23,11 @@ public class Band extends Artist {
     }
 
 
-    /**In this version, pLabel is included.
-     * @param pLabel
-     */
-    public Band(
-    int pID, String pName, String pLabel,
-    boolean pActive, LocalDate pDebut) {
-        super(pID, pName, pLabel, pActive, pDebut);
-    }
-
-
     /**
-     * Calls the second constructor
-     * from the super class.
+     * Calls the second constructor from the super class.
+     * With label, descripton is obligatory.
      * @see Artist
+     * @param pLabel is included
      * @param pDescription is included.
      */
     public Band(
@@ -66,7 +59,7 @@ public class Band extends Artist {
      * Please do a decent design because right now it sucks.
      */
     public void addMember(String pMember) {
-        if(!hasMember(pMember))
+        if(null == hasMember(pMember))
             members.add(pMember);
     }
 
@@ -83,12 +76,33 @@ public class Band extends Artist {
        return ans;
     }
 
-    public boolean hasMember(String pMember) {
-        boolean ans = false;
-        for (int i = 0; i < members.size() && !ans; i++) 
-            if (members.get(i).equalsIgnoreCase(pMember))
-                ans = true;
+
+    /**Returns the string contained in the 
+     * list in case of being stored, and 
+     * null in case of not finding anything.
+     * @param pMember
+     */
+    public String hasMember(String pMember) {
+        Collections.sort(members);
+        Optional <String> ans = 
+            members.stream()
+                .filter(m -> m.equalsIgnoreCase(pMember))
+                .findFirst(); 
         
-        return ans;
+        return ans.get();
+    }
+
+
+    /**Removes the member if it's contained 
+     * inside the list. @param pMember */
+    public void deleteMember(String pMember) {
+        if (null != hasMember(pMember))
+            hasMember(pMember);    
+    }
+
+    @Override
+    public String toString() { // TODO
+        return super.toString() + description +
+        "The members are: \n" + getMembersNames() ;
     }
 }
