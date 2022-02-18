@@ -1,8 +1,6 @@
 package Database.Class;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.time.LocalDate;
 
 public class Band extends Artist {
@@ -11,8 +9,7 @@ public class Band extends Artist {
 
     // Constructors
 
-    /**
-     * Calls the original constructor
+    /**Calls the original constructor
      * from the super class. Works the same way.
      * @see Artist
      */
@@ -23,8 +20,7 @@ public class Band extends Artist {
     }
 
 
-    /**
-     * Calls the second constructor from the super class.
+    /**Calls the second constructor from the super class.
      * With label, descripton is obligatory.
      * @see Artist
      * @param pLabel is included
@@ -94,7 +90,7 @@ public class Band extends Artist {
 
 
     /**Removes the member if it's contained 
-     * inside the list. @param pMember */
+     * inside the list. */
     public void deleteMember(String pMember) {
         if (null != hasMember(pMember))
             hasMember(pMember);    

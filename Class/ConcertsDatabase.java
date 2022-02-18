@@ -28,7 +28,7 @@ public abstract class ConcertsDatabase {
     public static void addConcert(Concert pConcert) {
         try {
             if (f.exists()) {
-                if (!isContained(pConcert.getID())) {
+                if (!isContained(pConcert)) {
                     MyObjectOutputStream moos = new MyObjectOutputStream();
                     moos.writeObject(pConcert);
                     moos.close();
@@ -51,14 +51,14 @@ public abstract class ConcertsDatabase {
      * @param pCode
      * @return boolean indicating if the concert is already.
      */
-    public static boolean isContained(int pCode) {
+    public static boolean isContained(Concert pConcert) {
         boolean a = false;
         if (f.exists()) {
             int length = Util.fileLength(f);
             try {
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
                 for (int i = 0; i < length && !a; i++)
-                    if (((Concert) ois.readObject()).getID() == pCode)
+                    if (((Concert) ois.readObject()).getID() == pConcert.getID())
                         a = true;
                 ois.close();
             } catch (Exception e) {
@@ -74,8 +74,10 @@ public abstract class ConcertsDatabase {
      *              will be deleted only if it's contained inside the
      *              databse.
      */
-    public static void deleteConcert(int pID) {
+    public static void deleteConcert(Concert pConcert) {
+        // TODO.: CHECK SECURITY
         char sino = 's';
+
         if (!f.exists()) {
             System.out.println("No hay conciertos para borrar.");
         } else {
@@ -101,7 +103,7 @@ public abstract class ConcertsDatabase {
             }
             // Tratamiento del ArrayList como hacíamos en la 2ª evaluación
             for (int i = 0; i < concerts.size(); i++) {
-                if (concerts.get(i).getID() == pID) {
+                if (concerts.get(i).getID() == pConcert.getID()) {
                    System.out.println(concerts.get(i));
                     System.out.println("¿Está seguro de que desea borrar este concierto? [s/n]");
                     sino = Util.readChar('s', 'n');
@@ -140,7 +142,7 @@ public abstract class ConcertsDatabase {
      * The only way of obtaining concerts from the Database if
      * by using the ID of an artist.
      */
-    public static ArrayList<Concert> getConcerts(int pAID) {
+    public static ArrayList<Concert> getConcerts(Artist pArtist) {
         ObjectInputStream ois = null;
         ArrayList<Concert> ans = new ArrayList<Concert>();
 
@@ -151,7 +153,7 @@ public abstract class ConcertsDatabase {
                 Concert aux;
                 for (int i = 0; i < length; i++) {
                     aux = (Concert) ois.readObject();
-                    if (aux.getAID() == pAID)
+                    if (aux.getAID() == pArtist.getID())
                         ans.add(aux);
                 }
 
@@ -231,56 +233,10 @@ public abstract class ConcertsDatabase {
         }
     }
 
-    public static void delete(int pID) {
-        if (f.exists()) {
-            boolean done = false;
+    
 
-            FileOutputStream fos = null;
-            ObjectOutputStream oos = null;
-            FileInputStream fis = null;
-            ObjectInputStream ois = null;
-
-            File auxFile = new File("auxiliar.dat");
-            try {
-                // the auxiliar file to store data is created.
-                fos = new FileOutputStream(auxFile);
-                oos = new ObjectOutputStream(fos);
-                // the file is opened to read the concerts.
-                fis = new FileInputStream(f);
-                ois = new ObjectInputStream(fis);
-
-                Concert aux;
-                do {
-                    aux = (Concert) ois.readObject();
-                    if (pID != aux.getID()) {
-                        oos.writeObject(aux);
-                        done = true;
-                    }
-                } while (aux != null);
-            }
-
-            catch (FileNotFoundException e) {
-                System.out.println("File not found.");
-            } catch (IOException e) {
-                System.out.println(" ");
-            } catch (ClassNotFoundException e) {
-                System.out.println("Error en la lectura de datos.");
-            }
-            try {
-                ois.close();
-                fis.close();
-                oos.close();
-                fos.close();
-            } catch (IOException e) {
-                System.out.println("Error al cerrar los ficheros");
-            }
-
-            if (!done)
-                System.out.println("The changes weren't done correctly.");
-            else {
-                f.delete();
-                auxFile.renameTo(f);
-            }
-        }
+    public static int createID() {
+        return 0;
+        // TODO
     }
 }

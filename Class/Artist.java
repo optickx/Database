@@ -74,6 +74,9 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
     public boolean isActive() {
         return active;
     }
+    public LocalDate getDebut() {
+        return debut;
+    }
 
 
     /**In case of being the year of the debut album 
@@ -177,11 +180,12 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
 
 
     /**
-     * @return A boolean if the value parameter is
+     * @return A String if the value parameter is
      * stored in the collection of pseudonyms. 
+     * Null if nothing is found.
      * @param pGenre Ignores case.
      */
-    private String playsGenre(String pGenre) {
+    String playsGenre(String pGenre) {
         Optional <String> ans = 
             genres.stream()
                 .filter(g -> g.equalsIgnoreCase(pGenre))
@@ -213,6 +217,12 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
             System.out.println(
                 "The album " + pAlbum.getName() + 
                 " is already in " + name + "'s discography.");
+    }
+
+
+    /**@return the number of albums an artist.*/
+    public int getNumberOfAlbums() {
+        return discography.size();
     }
 
 
@@ -377,15 +387,20 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
 
     /**Show all the concerts sorted. Calling to the databse*/
     public ArrayList <Concert> sortConcertsBy() {
-        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(ID);
+        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(this);
         return concerts;
     }
 
     public ArrayList <Concert> sortConcertsByYear() {
-        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(ID);
+        ArrayList <Concert> concerts = ConcertsDatabase.getConcerts(this);
         concerts.stream()
             .sorted((a1, a2) -> a1.compareDate(a2));
         return concerts;
+    }
+
+    public void deleteConcert(Concert pConcert) {
+        if (pConcert.getAID() == ID) 
+            ConcertsDatabase.deleteConcert(pConcert);
     }
 
 
@@ -408,6 +423,14 @@ public abstract class Artist implements Comparable <Artist>, Serializable{
             
         return ans;
     }
+
+
+    /**Same as toString, but simplificated. */
+    public String quickInfo() {
+        return name + " " ; //TODO
+    }
+
+
 
     @Override
     public int compareTo(Artist pArtist) {
